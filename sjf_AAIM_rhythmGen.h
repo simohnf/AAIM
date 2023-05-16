@@ -221,13 +221,13 @@ public:
         {
             m_currentIOI = rand01() <= m_comp ? chooseIOI( currentBeat ) : 0;
             m_vel = m_baseIndispensibility[ beat ] * m_ioiIndispensibility[ (int)ioiPhase ];
-            m_restFlag = shouldReverse( m_vel ) ? 1 : 0;
+            m_restFlag = shouldRest( m_vel ) ? 0 : 1;
 //            m_restFlag = rand01() < m_rests ? 1 : 0;
         }
         else if ( (int)ioiPhase > (int)m_lastIOIPhase )
         {
             m_vel = m_baseIndispensibility[ beat ] * m_ioiIndispensibility[ (int)ioiPhase ];
-            m_restFlag = shouldReverse( m_vel ) ? 1 : 0;
+            m_restFlag = shouldRest( m_vel ) ? 0 : 1;
 //            m_restFlag = rand01() < m_rests ? 1 : 0;
         }
         m_lastIOIPhase = ioiPhase; // save ioiPhase to use for comparison next time
@@ -328,7 +328,7 @@ private:
     //============================================================
     // this determines whether a specific beat should have a reverse
     // steps velocity already incorporates both step through base ioi and current ioi
-    bool shouldReverse( float velocity )
+    bool shouldRest( float velocity )
     {
         return rand01() < m_rests * ( 1.0f - velocity ) ? true : false;
     }
@@ -362,7 +362,7 @@ private:
         float m_count = 0, m_lastPhase = 0;
     };
     //============================================================
-    float m_comp = 0, m_rests = 0, m_nBeats = 8, m_lastIOIPhase = 1, m_vel = 1, m_restFlag = 0;
+    float m_comp = 0, m_rests = 0, m_nBeats = 8, m_lastIOIPhase = 1, m_vel = 1, m_restFlag = 1;
     size_t m_currentIOI = 0;
     std::vector< std::array<float, 3> > m_probs, m_limitedProbs;
     std::vector< float > m_nRepsToSync, m_nBaseIOIsToSync;
