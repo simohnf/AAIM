@@ -8,14 +8,7 @@
 #ifndef sjf_AAIM_h
 #define sjf_AAIM_h
 
-//============================================================
-//============================================================
-//============================================================
-// this is just a simple random generator for numbers between zero and one
-inline float random01()
-{
-    return float( rand() ) / float( RAND_MAX );
-}
+#include "sjf_audio/sjf_audioUtilitiesC++.h"
 //============================================================
 //============================================================
 //============================================================
@@ -47,7 +40,7 @@ public:
                     nBeatsToGenerate -= 4;
                     break;
                 default:
-                    auto r = random01() < 0.5 ? 2 : 3;
+                    auto r = rand01() < 0.5 ? 2 : 3;
                     grouping.push_back( r );
                     nBeatsToGenerate -= r;
                     break;
@@ -226,16 +219,16 @@ public:
         // output random ioi or baseIOI depending on result
         if (ioiPhase < 0.5 && m_lastIOIPhase >= 0.5)
         {
-            m_currentIOI = random01() <= m_comp ? chooseIOI( currentBeat ) : 0;
+            m_currentIOI = rand01() <= m_comp ? chooseIOI( currentBeat ) : 0;
             m_vel = m_baseIndispensibility[ beat ] * m_ioiIndispensibility[ (int)ioiPhase ];
             m_restFlag = shouldReverse( m_vel ) ? 1 : 0;
-//            m_restFlag = random01() < m_rests ? 1 : 0;
+//            m_restFlag = rand01() < m_rests ? 1 : 0;
         }
         else if ( (int)ioiPhase > (int)m_lastIOIPhase )
         {
             m_vel = m_baseIndispensibility[ beat ] * m_ioiIndispensibility[ (int)ioiPhase ];
             m_restFlag = shouldReverse( m_vel ) ? 1 : 0;
-//            m_restFlag = random01() < m_rests ? 1 : 0;
+//            m_restFlag = rand01() < m_rests ? 1 : 0;
         }
         m_lastIOIPhase = ioiPhase; // save ioiPhase to use for comparison next time
         ioiPhase -= (int)ioiPhase; // only output fractional part of ioi phase
@@ -316,7 +309,7 @@ private:
             // scale probabilities from set values to a scale from 0 --> total
             m_limitedProbs[ i ][ 1 ] = (i != 0) ? m_limitedProbs[ i ][ 1 ] + m_limitedProbs[ i-1 ][ 1 ] : m_limitedProbs[ i ][ 1 ];
         }
-        auto r = random01() * total;
+        auto r = rand01() * total;
         auto chosenIOI = 0ul;
         auto ioiChosen = false;
         for ( size_t i = 0; i < nIOIs; i++ )
@@ -337,7 +330,7 @@ private:
     // steps velocity already incorporates both step through base ioi and current ioi
     bool shouldReverse( float velocity )
     {
-        return random01() < m_rests * ( 1.0f - velocity ) ? true : false;
+        return rand01() < m_rests * ( 1.0f - velocity ) ? true : false;
     }
     
     //============================================================
