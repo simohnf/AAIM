@@ -28,6 +28,7 @@ public:
             while( m_pattern.size() < nBeats )
                 m_pattern.push_back( false );
         }
+        m_nBeats = nBeats;
     }
     
     size_t getNumBeats()
@@ -70,14 +71,14 @@ public:
         }
         // if distance <= baseIOI && < random01
         // output trigger
-        if ( distance <= 1 && distance < rand01() )
+        if ( distance < 1.0f && distance < rand01() )
             return true;
         // count the IOIs in pattern and divide by total number of beats
         auto count = 0;
         for ( size_t i = 0; i < m_nBeats; i++ )
             count = m_pattern[ i ] ? count + 1 : count;
         auto fract = (float)count / (float)m_nBeats; // calculate fraction of pattern that has beats
-        return ( fract > rand01() ) ? true : false; // if this fraction is greater than a random number output a beat
+        return ( fract*m_fills > rand01() ) ? true : false; // if ( fraction * fills probability ) is greater than a random number output a beat
     }
 private:
     
