@@ -9,6 +9,7 @@
 #define sjf_AAIM_patternVary_h
 #include "sjf_audio/sjf_audioUtilitiesC++.h"
 
+template< class T >
 class AAIM_patternVary
 {
 public:
@@ -36,19 +37,19 @@ public:
         return m_nBeats;
     }
     
-    void setFills( float fills )
+    void setFills( T fills )
     {
         m_fills = std::fmin( std::fmax( fills, 0 ), 1 );
     }
     
-    float getFills()
+    T getFills()
     {
         return m_fills;
     }
     
     void setBeat( size_t beatNumber, bool trueIfTriggerOnBeats )
     {
-        if ( beatNumber < 0 || beatNumber > m_pattern.size() )
+        if ( beatNumber < 0 || beatNumber >= m_pattern.size() )
         {
             return;
         }
@@ -60,10 +61,10 @@ public:
         return m_pattern;
     }
     
-    bool triggerBeat( float currentBeat )
+    bool triggerBeat( T currentBeat, T beatsToSync = 1 )
     {
         // check distance from current position to nearest note in pattern
-        auto distance = (float)m_nBeats;
+        auto distance = (T)m_nBeats;
         for ( size_t i = 0; i < m_nBeats + 1; i++ ) // add one to total nBeats to circle to beginning of pattern at end
         {
             auto distFromPos = abs(currentBeat - i);
@@ -71,20 +72,20 @@ public:
         }
         // if distance <= baseIOI && < random01
         // output trigger
-        if ( distance < 1.0f && distance < rand01() )
+        if ( distance < beatsToSync && (distance / beatsToSync) < rand01() )
             return true;
         // count the IOIs in pattern and divide by total number of beats
         auto count = 0;
         for ( size_t i = 0; i < m_nBeats; i++ )
             count = m_pattern[ i ] ? count + 1 : count;
-        auto fract = (float)count / (float)m_nBeats; // calculate fraction of pattern that has beats
+        auto fract = (T)count / (T)m_nBeats; // calculate fraction of pattern that has beats
         return ( fract*m_fills > rand01() ) ? true : false; // if ( fraction * fills probability ) is greater than a random number output a beat
     }
 private:
     
     std::vector< bool > m_pattern;
     size_t m_nBeats = 8;
-    float m_fills = 0;
+    T m_fills = 0;
 };
 
 #endif /* sjf_AAIM_patternVary_h */
