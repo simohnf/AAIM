@@ -56,7 +56,7 @@ public:
         m_pattern[ beatNumber ] = trueIfTriggerOnBeats;
     }
     
-    std::vector< bool > getPattern()
+    const std::vector< bool >& getPattern()
     {
         return m_pattern;
     }
