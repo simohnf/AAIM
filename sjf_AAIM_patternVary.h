@@ -61,6 +61,16 @@ public:
         return m_pattern;
     }
     
+    size_t getPatternLong()
+    {
+        auto outLong = 0ul;
+        for ( size_t i = 0; i < m_pattern.size(); i++ )
+        {
+            outLong += m_pattern[ i ] ? (1<<i) : 0;
+        }
+        return outLong;
+    }
+    
     bool triggerBeat( T currentBeat, T beatsToSync = 1 )
     {
         // check distance from current position to nearest note in pattern

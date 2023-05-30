@@ -306,7 +306,6 @@ private:
                 nPossibleIOIs++;
             }
         }
-//        nIOIs = count; // reset to the number of possible IOIs given the beats remaining
         
         auto total = 0.0f; // this store the total of all of the "probabilities" set
         for ( size_t i = 0; i < nPossibleIOIs; i++ )
