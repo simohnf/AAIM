@@ -91,6 +91,12 @@ public:
         auto fract = (T)count / (T)m_nBeats; // calculate fraction of pattern that has beats
         return ( fract*m_fills > rand01() ) ? true : false; // if ( fraction * fills probability ) is greater than a random number output a beat
     }
+    
+    bool getStep( size_t step )
+    {
+        return m_pattern[ step ];
+    }
+    
 private:
     
     std::vector< bool > m_pattern;
