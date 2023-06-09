@@ -64,7 +64,7 @@ public:
     bool triggerBeat( T currentBeat, T beatsToSync = 1 )
     {
         // check distance from current position to nearest note in pattern
-        auto distance = (T)m_nBeats;
+        auto distance = static_cast<T>(m_nBeats);
         for ( size_t i = 0; i < m_nBeats + 1; i++ ) // add one to total nBeats to circle to beginning of pattern at end
         {
             auto distFromPos = abs(currentBeat - i);
@@ -78,7 +78,7 @@ public:
         auto count = 0;
         for ( size_t i = 0; i < m_nBeats; i++ )
             count = m_pattern[ i ] ? count + 1 : count;
-        auto fract = (T)count / (T)m_nBeats; // calculate fraction of pattern that has beats
+        auto fract = static_cast<T>(count) / static_cast<T>(m_nBeats); // calculate fraction of pattern that has beats
         return ( fract*m_fills > rand01() ) ? true : false; // if ( fraction * fills probability ) is greater than a random number output a beat
     }
 private:

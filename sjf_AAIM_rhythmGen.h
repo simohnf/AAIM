@@ -222,7 +222,7 @@ public:
         while( currentBeat >= m_nBeats )
             currentBeat -= m_nBeats;
         // calculate the phase within a single beat
-        auto beat = (int)currentBeat;
+        auto beat = static_cast<int>(currentBeat);
         auto baseIOIPhase = currentBeat - beat; // phase 0 --> 1
         // convert phase through baseIOI to phase through chosen ioi grouping
         // i.e. if an ioi of 0.75 is chosen it must repeat 4 times to sync to base ioi
@@ -233,16 +233,16 @@ public:
         if (ioiPhase < 0.5 && m_lastIOIPhase >= 0.5)
         {
             m_currentIOI = rand01() <= m_comp ? chooseIOI( currentBeat ) : 0;
-            m_vel = m_baseindispensability[ beat ] * m_IOIindispensability[ (int)ioiPhase ];
+            m_vel = m_baseindispensability[ beat ] * m_IOIindispensability[ static_cast<int>(ioiPhase) ];
             m_restFlag = shouldRest( m_vel ) ? 0 : 1;
         }
-        else if ( (int)ioiPhase > (int)m_lastIOIPhase )
+        else if ( static_cast<int>(ioiPhase) > static_cast<int>(m_lastIOIPhase) )
         {
-            m_vel = m_baseindispensability[ beat ] * m_IOIindispensability[ (int)ioiPhase ];
+            m_vel = m_baseindispensability[ beat ] * m_IOIindispensability[ static_cast<int>(ioiPhase) ];
             m_restFlag = shouldRest( m_vel ) ? 0 : 1;
         }
         m_lastIOIPhase = ioiPhase; // save ioiPhase to use for comparison next time
-        ioiPhase -= (int)ioiPhase; // only output fractional part of ioi phase
+        ioiPhase -= static_cast<int>(ioiPhase); // only output fractional part of ioi phase
         return { ioiPhase, m_vel, m_restFlag, m_IOIs[ m_currentIOI ].getDivsion(), m_IOIs[ m_currentIOI ].getNumBaseIOIsToSync() };
     }
     //============================================================
@@ -291,7 +291,7 @@ private:
                 auto postIndis = m_baseindispensability[ ((indexForSynchronisation + 1) % (size_t)m_nBeats) ];
                 if ( indexIndis > preIndis && indexIndis > postIndis )
                     prob *= 2.0f;
-                m_limitedIOIs.emplace_back( AAIM_PossibleIOI( prob, i ) );
+                m_limitedIOIs.emplace_back( AAIM_PossibleIOI{ prob, i } );
                 nPossibleIOIs++;
             }
         }
@@ -347,7 +347,7 @@ private:
                     m_count -= nBeats;
             }
             m_lastPhase = phaseIn;
-            return (T)m_count + m_lastPhase;
+            return static_cast<T>(m_count) + m_lastPhase;
         }
         void reset()
         {
@@ -367,7 +367,7 @@ private:
     public:
         AAIM_IOI( T division, T probability )
             :   m_division{ division },
-                m_probability{ (T)std::fmin( std::fmax( 0, probability ), 1 ) },
+                m_probability{ static_cast<T>(std::fmin( std::fmax( 0, probability ), 1 ) ) },
                 m_invDivision{ 1.0f / division }
         {
             calculateNumBeatsToSync();
@@ -391,7 +391,7 @@ private:
             // no guarantee this won't go forever :/
             // need to think of a solution...
             auto reps = 1.0f;
-            while( ( ( m_division * reps) - (int)(m_division * reps) ) > eps )
+            while( ( ( m_division * reps) - static_cast<int>(m_division * reps) ) > eps )
                 reps += 1;
             m_nRepsToSync = reps;
             m_nBaseIOIsToSync = (m_nRepsToSync * m_division );
