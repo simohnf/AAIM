@@ -56,9 +56,19 @@ public:
         m_pattern[ beatNumber ] = trueIfTriggerOnBeats;
     }
     
-    std::vector< bool > getPattern()
+    const std::vector< bool >& getPattern()
     {
         return m_pattern;
+    }
+    
+    size_t getPatternLong()
+    {
+        auto outLong = 0ul;
+        for ( size_t i = 0; i < m_pattern.size(); i++ )
+        {
+            outLong += m_pattern[ i ] ? (1<<i) : 0;
+        }
+        return outLong;
     }
     
     bool triggerBeat( T currentBeat, T beatsToSync = 1 )
@@ -81,6 +91,12 @@ public:
         auto fract = static_cast<T>(count) / static_cast<T>(m_nBeats); // calculate fraction of pattern that has beats
         return ( fract*m_fills > rand01() ) ? true : false; // if ( fraction * fills probability ) is greater than a random number output a beat
     }
+    
+    bool getStep( size_t step )
+    {
+        return m_pattern[ step ];
+    }
+    
 private:
     
     std::vector< bool > m_pattern;

@@ -185,6 +185,17 @@ public:
         m_limitedIOIs.reserve( m_IOIs.size() );
     }
     
+    void setIOIList( std::vector< std::array < T, 2 > > ioiList )
+    {
+        if ( ioiList.size() < 1 )
+            return;
+        m_IOIs.clear();
+        for ( size_t i = 0; i < ioiList.size(); i++ )
+        {
+            setIOIProbability( ioiList[ i ][ 0 ], ioiList[ i ][ 1 ] );
+        }
+        m_IOIs.shrink_to_fit();
+    }
     //============================================================
     // This returns the division, probability, number of repetitions to sync, and number of base IOIs to sync
     const std::vector< std::array<T, 4> > getIOIProbabilities()
@@ -295,7 +306,6 @@ private:
                 nPossibleIOIs++;
             }
         }
-//        nIOIs = count; // reset to the number of possible IOIs given the beats remaining
         
         auto total = 0.0f; // this store the total of all of the "probabilities" set
         for ( size_t i = 0; i < nPossibleIOIs; i++ )
@@ -307,6 +317,14 @@ private:
         }
         auto r = rand01() * total;
         auto chosenIOI = 0ul;
+        for ( size_t i = 0; i < m_IOIs.size(); i++ )
+        {
+            if ( m_IOIs[ i ].getDivsion() == 1.0 )
+            {
+                chosenIOI = i;
+                break;
+            }
+        }
         auto ioiChosen = false;
         for ( size_t i = 0; i < nPossibleIOIs; i++ )
         {
